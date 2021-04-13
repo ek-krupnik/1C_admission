@@ -50,6 +50,7 @@ void Solver::SetAnswer () {
 	}
 
 	std::vector<std::vector<Edge> > relations = graph.GetRelations ();
+
 	// for second-level courses
 	for (int vertex = 0; vertex < graph_size; vertex++) {
 		if (levels[vertex] == 2) {
@@ -76,6 +77,7 @@ void Solver::SetAnswer () {
 		}
 	}
 
+	// next levels
 }
 
 void Solver::GetMoreCourses () {
