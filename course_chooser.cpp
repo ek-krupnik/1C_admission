@@ -1,5 +1,5 @@
 #include <iostream>
-#include <solver.h>
+#include "solver.h"
 
 const int THIRD_NUM = 3;
 
@@ -47,7 +47,10 @@ int main () {
 		std::cin >> third_lvl_courses[i];
 	}
 
-	Solver solver (graph);
+	course_graph.SetFifthLvl (fifth_lvl_course);
+	course_graph.SetThirdLvl (third_lvl_courses);
+
+	Solver solver (course_graph, courses_number);
 	std::vector<int> result = solver.FindCourses ();
 
 	for (auto i : result) {
