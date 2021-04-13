@@ -3,6 +3,7 @@
 #include "graph.h"
 
 const int MIN_SIZE = 21;
+const int MAX_N = 100;
 
 class Solver {
 
@@ -13,8 +14,10 @@ public:
 	
 	~Solver () = default;
 	Solver& operator= (const Solver& solver) = default;
+	int GetSize () const { return size; }
 
 	std::vector<int> FindCourses ();
+	void SetAnswer ();
 	void GetMoreCourses ();
 
 private:
@@ -24,12 +27,58 @@ private:
 	std::vector<bool> visited;
 };
 
-void SetAnswer () {
+void Solver::SetAnswer () {
+	
+	int graph_size = GetSize ();
 
-	// for first-level
+	std::vector<int> levels = graph.GetLevels ();
+	std::vector<int> dependence = graph.GetDependence ();
+	std::vector<int> answer (graph_size, MAX_N);
+
+	// zero-level-courses need to study one course to finish them
+	for (int vertex = 0; vertex < graph_size; vertex++) {
+		if (levels[vertex] == 0) {
+			answer[vertex] = 1;
+		}
+	}
+
+	// for first-level courses
+	for (int vertex = 0; vertex < graph_size; vertex++) {
+		if (levels[vertex] == 1) {
+			answer[vertex] = dependence[vertex];
+		}
+	}
+
+	std::vector<std::vector<Edge> > relations = graph.GetRelations ();
+	// for second-level courses
+	for (int vertex = 0; vertex < graph_size; vertex++) {
+		if (levels[vertex] == 2) {
+
+			answer[vertex] = 1;
+			int last_color = -1;
+			int rest = 0;
+			int min_color_number = MAX_N;
+
+			for (auto edge : relations[vertex]) {
+				
+				if (last_color != edge.color) {
+					answer[vertex] += rest;
+					answer[vertex] += answer[edge.to];
+				} else {
+					rest = min_color_number;
+				}
+
+				last_color = edge.color;
+				min_color_number = std::min(MAX_N, answer[edge.to]);
+			}
+
+			answer[vertex] += rest;
+		}
+	}
+
 }
 
-void GetMoreCourses () {
+void Solver::GetMoreCourses () {
 
 	// starting from courses with smallest number
 }
@@ -63,6 +112,7 @@ std::vector<int> Solver::FindCourses () {
 				if (edge.color != last_color) {
 
 					vertex_queue.push(edge.to);
+					last_color = edge.color;
 				}
 			}
 		}

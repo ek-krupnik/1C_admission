@@ -9,12 +9,17 @@ int main () {
 	std::cin >> courses_number;
 	Graph course_graph (courses_number);
 
+	std::vector<int> levels (courses_number, 0);
+	std::vector<int> dependence (courses_number, 0);
+
 	for (int i = 0; i < courses_number; i++) {
 
 		int main_course = 0;
 		int course_level = 0;
 		int relations_number = 0;
 		std::cin >> main_course >> course_level >> relations_number;
+		levels[main_course] = course_level;
+		dependence[main_course] = relations_number;
 
 		for (int color = 0; color < relations_number; color++) {
 
@@ -47,6 +52,8 @@ int main () {
 		std::cin >> third_lvl_courses[i];
 	}
 
+	course_graph.SetLevels (levels);
+	course_graph.SetDependence (dependence);
 	course_graph.SetFifthLvl (fifth_lvl_course);
 	course_graph.SetThirdLvl (third_lvl_courses);
 
