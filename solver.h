@@ -1,5 +1,8 @@
 #include <queue>
+#include <algorithm>
 #include "graph.h"
+
+const int MIN_SIZE = 21;
 
 class Solver {
 
@@ -12,6 +15,7 @@ public:
 	Solver& operator= (const Solver& solver) = default;
 
 	std::vector<int> FindCourses ();
+	void GetMoreCourses ();
 
 private:
 
@@ -19,6 +23,16 @@ private:
 	int size = 0;
 	std::vector<bool> visited;
 };
+
+void SetAnswer () {
+
+	// for first-level
+}
+
+void GetMoreCourses () {
+
+	// starting from courses with smallest number
+}
 
 std::vector<int> Solver::FindCourses () {
 
@@ -36,6 +50,7 @@ std::vector<int> Solver::FindCourses () {
 
 		int vertex = vertex_queue.front();
 		vertex_queue.pop();
+		result.push_back(vertex);
 		visited[vertex] = true;
 		len++;
 
@@ -44,14 +59,20 @@ std::vector<int> Solver::FindCourses () {
 			
 			if (!visited[edge.to]) {
 
-				// in order to pass minimal way
+				// in order to pass only different colored way
 				if (edge.color != last_color) {
-					// && !edge.color_used
+
 					vertex_queue.push(edge.to);
 				}
 			}
 		}
 	}
 
+	if (result.size() < MIN_SIZE) {
+
+		// GetMoreCourses ();
+	}
+
+	sort(result.begin(), result.end());
 	return result;
 }
